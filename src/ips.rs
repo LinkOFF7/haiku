@@ -16,13 +16,14 @@ const TEXT_OFFSET: u32 = 0x100;
 pub fn generate_ips(entries: &[IpsEntry], result_filename: &str) -> Result<(), std::io::Error> {
     let mut fp = File::create(result_filename)?;
 
-    fp.write_all(b"PATCH")?;
+    fp.write_all(b"IPS32")?;
 
     for entry in entries.iter() {
         let nso_offset = entry.offset + TEXT_OFFSET;
 
-        // address as 24-bit BE
+        // address as 32-bit BE
         fp.write_all(&[
+            ((nso_offset >> 24) & 0xFF) as u8,
             ((nso_offset >> 16) & 0xFF) as u8,
             ((nso_offset >> 8)  & 0xFF) as u8,
             ((nso_offset)       & 0xFF) as u8
@@ -37,7 +38,7 @@ pub fn generate_ips(entries: &[IpsEntry], result_filename: &str) -> Result<(), s
         fp.write_all(&entry.patch)?;
     }
 
-    fp.write_all(b"EOF")?;
+    fp.write_all(b"EEOF")?;
 
     Ok(())
 }
