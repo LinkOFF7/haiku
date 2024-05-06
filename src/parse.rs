@@ -149,7 +149,7 @@ pub fn parse_haiku(filename: &str, mode: Mode, arch: Arch) -> Result<Vec<ips::Ip
                         offset: start_offset,
                         patch: patch_bytes.clone(),
                     });
-
+                    patch_bytes.clear();
                     continue;
                 }
 
